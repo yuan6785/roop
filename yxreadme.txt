@@ -1,4 +1,7 @@
 conda activate py310_gpt4free
+ffmpeg version 5.1.2
+mac
+
 一般不要用界面来生成，用命令行生成更方便
 
 
