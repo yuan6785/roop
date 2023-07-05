@@ -22,7 +22,7 @@ import roop.metadata
 import roop.ui as ui
 from roop.predicter import predict_image, predict_video
 from roop.processors.frame.core import get_frame_processors_modules
-from roop.utilities import has_image_extension, is_image, is_video, detect_fps, create_video, extract_frames, get_temp_frame_paths, restore_audio, create_temp, move_temp, clean_temp, normalize_output_path
+from roop.utilities import has_image_extension, is_image, is_video, detect_fps, create_video, extract_frames, get_temp_frame_paths, restore_audio, create_temp, move_temp, clean_temp, normalize_output_path, create_gif
 
 if 'ROCMExecutionProvider' in roop.globals.execution_providers:
     del torch
@@ -38,6 +38,7 @@ def parse_args() -> None:
     program.add_argument('-t', '--target', help='select an target image or video', dest='target_path')
     program.add_argument('-o', '--output', help='select output file or directory', dest='output_path')
     program.add_argument('--frame-processor', help='frame processors (choices: face_swapper, face_enhancer, ...)', dest='frame_processor', default=['face_swapper'], nargs='+')
+    # store_true:  表示不接受任何参数值
     program.add_argument('--keep-fps', help='keep original fps', dest='keep_fps', action='store_true', default=False)
     program.add_argument('--keep-audio', help='keep original audio', dest='keep_audio', action='store_true', default=True)
     program.add_argument('--keep-frames', help='keep temporary frames', dest='keep_frames', action='store_true', default=False)
@@ -48,6 +49,9 @@ def parse_args() -> None:
     program.add_argument('--execution-provider', help='available execution provider (choices: cpu, ...)', dest='execution_provider', default=['cpu'], choices=suggest_execution_providers(), nargs='+')
     program.add_argument('--execution-threads', help='number of execution threads', dest='execution_threads', type=int, default=suggest_execution_threads())
     program.add_argument('-v', '--version', action='version', version=f'{roop.metadata.name} {roop.metadata.version}')
+    # add by yx---支持gif---
+    program.add_argument('--out-type', help='keep original fps', dest='out_type', default='video') # video, gif
+    program.add_argument('--gif-dur', help='keep original fps', dest='gif_dur', type=str, default='0.2') # 每张图显示的时间
 
     args = program.parse_args()
 
@@ -65,6 +69,9 @@ def parse_args() -> None:
     roop.globals.max_memory = args.max_memory
     roop.globals.execution_providers = decode_execution_providers(args.execution_provider)
     roop.globals.execution_threads = args.execution_threads
+    # add by yx---支持gif---
+    roop.globals.out_type = args.out_type
+    roop.globals.gif_dur = args.gif_dur
 
 
 def encode_execution_providers(execution_providers: List[str]) -> List[str]:
@@ -158,6 +165,7 @@ def start() -> None:
     # process image to videos
     if predict_video(roop.globals.target_path):
         destroy()
+    # 替换训练生成N张图
     update_status('Creating temp resources...')
     create_temp(roop.globals.target_path)
     update_status('Extracting frames...')
@@ -168,30 +176,38 @@ def start() -> None:
         frame_processor.process_video(roop.globals.source_path, temp_frame_paths)
         frame_processor.post_process()
         release_resources()
-    # handles fps
-    if roop.globals.keep_fps:
-        update_status('Detecting fps...')
-        fps = detect_fps(roop.globals.target_path)
-        update_status(f'Creating video with {fps} fps...')
-        create_video(roop.globals.target_path, fps)
-    else:
-        update_status('Creating video with 30.0 fps...')
-        create_video(roop.globals.target_path)
-    # handle audio
-    if roop.globals.keep_audio:
+    # return
+    # 生成结果文件
+    if roop.globals.out_type == 'video':
+        # handles fps
         if roop.globals.keep_fps:
-            update_status('Restoring audio...')
+            update_status('Detecting fps...')
+            fps = detect_fps(roop.globals.target_path)
+            update_status(f'Creating video with {fps} fps...')
+            create_video(roop.globals.target_path, fps)
         else:
-            update_status('Restoring audio might cause issues as fps are not kept...')
-        restore_audio(roop.globals.target_path, roop.globals.output_path)
-    else:
-        move_temp(roop.globals.target_path, roop.globals.output_path)
-    # clean and validate
-    clean_temp(roop.globals.target_path)
-    if is_video(roop.globals.target_path):
-        update_status('Processing to video succeed!')
-    else:
-        update_status('Processing to video failed!')
+            update_status('Creating video with 30.0 fps...')
+            create_video(roop.globals.target_path)
+        # handle audio
+        if roop.globals.keep_audio:
+            if roop.globals.keep_fps:
+                update_status('Restoring audio...')
+            else:
+                update_status('Restoring audio might cause issues as fps are not kept...')
+            restore_audio(roop.globals.target_path, roop.globals.output_path)
+        else:
+            move_temp(roop.globals.target_path, roop.globals.output_path)
+        # clean and validate
+        clean_temp(roop.globals.target_path)
+        if is_video(roop.globals.target_path):
+            update_status('Processing to video succeed!')
+        else:
+            update_status('Processing to video failed!')
+    elif roop.globals.out_type == 'gif':
+        update_status('Creating gif...')
+        create_gif(roop.globals.target_path, roop.globals.output_path, roop.globals.gif_dur)
+        update_status('Processing to gif succeed!')
+        clean_temp(roop.globals.target_path)
 
 
 def destroy() -> None:
