@@ -41,6 +41,32 @@ cloab笔记本参考（有显卡，可以换比较大的视频，一般的gif本
      https://blog.csdn.net/weixin_42357472/article/details/131104449   
      https://huaweicloud.csdn.net/638088d7dacf622b8df89c0c.html
      有道搜索[人脸识别]--里面有上面两个文章的保存，和roop用的统一模型，还可以实时检测摄像头人脸
-     ###############
+
+
+     ###############核心算法
      接下来编写recognition()函数实现人脸识别，首先获取每张人脸的特征embedding，其中使用人脸识别的就是通过欧氏距离来对比人脸库中的人脸特征，默认如何它们的欧氏距离小于1.24，我们就可以认为他们是同一个人。
+    def recognition(self, image):
+        faces = self.model.get(image)
+        results = list()
+        for face in faces:
+            # 开始人脸识别
+            embedding = np.array(face.embedding).reshape((1, -1))
+            embedding = preprocessing.normalize(embedding)
+            user_name = "unknown"
+            for com_face in self.faces_embedding:
+                r = self.feature_compare(embedding, com_face["feature"], self.threshold) # threshold=1.24
+                if r:
+                    user_name = com_face["user_name"]
+            results.append(user_name)
+        return results
+
+     上面使用到的欧氏距离计算方式如下。
+     @staticmethod
+     def feature_compare(feature1, feature2, threshold):
+          diff = np.subtract(feature1, feature2)
+          dist = np.sum(np.square(diff), 1)
+          if dist < threshold:
+               return True
+          else:
+               return False
      ###############
