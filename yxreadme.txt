@@ -17,7 +17,7 @@ python run.py --source /Users/yuanxiao/workspace/0yxgithub/roop/yxsamples/0daifa
 python run.py --source /Users/yuanxiao/workspace/0yxgithub/roop/yxsamples/0daifang.jpg --target /Users/yuanxiao/workspace/0yxgithub/roop/yxsamples/0yaonv.mp4  --output /Users/yuanxiao/workspace/0yxgithub/roop/yxsamples/output3.gif --out-type gif --gif-dur 0.0333 --many-faces --gif-frames -1
 
 生成gif不换脸，只是人脸增强(一般用于换脸后的增强)(不需要source参数，只需要target参数)---也可以用于视频（如果是用于换脸后的增强，--gif-dur参数和换脸的--gif-dur最好一致）:
-python run.py  --target /Users/yuanxiao/workspace/0yxgithub/roop/yxsamples/output3.gif  --output /Users/yuanxiao/workspace/0yxgithub/roop/yxsamples/output3_enhancer.gif --out-type gif --gif-dur 0.0333 --many-faces --frame-processor face_enhancer
+python run.py  --target /Users/yuanxiao/workspace/0yxgithub/roop/yxsamples/output3.gif  --output /Users/yuanxiao/workspace/0yxgithub/roop/yxsamples/output3_enhancer.gif --out-type gif --gif-dur 0.1 --many-faces --frame-processor face_enhancer
 
 生成png图片:
 python run.py --source /Users/yuanxiao/workspace/0yxgithub/roop/yxsamples/0daifang.jpg --target /Users/yuanxiao/workspace/0yxgithub/roop/yxsamples/0yx.jpeg  --output /Users/yuanxiao/workspace/0yxgithub/roop/yxsamples/output3.png 
