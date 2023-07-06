@@ -35,3 +35,8 @@ python run.py  --target /Users/yuanxiao/workspace/0yxgithub/roop/yxsamples/outpu
 cloab笔记本参考（有显卡，可以换比较大的视频，一般的gif本地mac即可）： ufyx_换脸.ipynb
 
 换脸后再增强人脸的效果更好
+
+
+后期要做:
+     https://blog.csdn.net/weixin_42357472/article/details/131104449
+     具体的人脸识别，哪张脸属于哪个人，然后再换脸
