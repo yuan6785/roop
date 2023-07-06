@@ -7,6 +7,7 @@ mac
 --frame-processor 可以用了选择是换脸还是人脸增强
 
 生成视频(target可以为gif也可以为视频, 但重要： target必须是偶数分辨率):
+--keep-fps --keep-frames 保持原视频的帧率和帧数
 python run.py --source /Users/yuanxiao/workspace/0yxgithub/roop/yxsamples/0daifang.jpg --target /Users/yuanxiao/workspace/0yxgithub/roop/yxsamples/0yaonv.mp4  --output /Users/yuanxiao/workspace/0yxgithub/roop/yxsamples/output3.mp4
 
 注意: 生成gif的target的帧数图片不要太多（否则内存会扛不住，一般30帧的视频控制在一分钟以内, 2000张图片以内）:
