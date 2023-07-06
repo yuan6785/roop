@@ -1,6 +1,7 @@
 conda activate py310_gpt4free
 ffmpeg version 5.1.2
 mac
+换脸的模型(models/inswapper_128.onnx)我保存在百度网盘（机器学习资料＞换脸roop的模型保存）---------
 
 一般不要用界面来生成，用命令行生成更方便
 
