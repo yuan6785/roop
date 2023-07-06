@@ -11,6 +11,8 @@ python run.py --source /Users/yuanxiao/workspace/0yxgithub/roop/yxsamples/0daifa
 生成gif(target可以为gif也可以为视频, 记得配置--out-type和--gif-dur参数（# 每张图显示的时间）   ---这两个参数是我加的):
 python run.py --source /Users/yuanxiao/workspace/0yxgithub/roop/yxsamples/0daifang.jpg --target /Users/yuanxiao/workspace/0yxgithub/roop/yxsamples/0009.gif  --output /Users/yuanxiao/workspace/0yxgithub/roop/yxsamples/output3.gif --out-type gif --gif-dur 0.1 --many-faces
 
+python run.py --source /Users/yuanxiao/workspace/0yxgithub/roop/yxsamples/0daifang.jpg --target /Users/yuanxiao/workspace/0yxgithub/roop/yxsamples/0yaonv.mp4  --output /Users/yuanxiao/workspace/0yxgithub/roop/yxsamples/output3.gif --out-type gif --gif-dur 0.0333 --many-faces
+
 生成png图片:
 python run.py --source /Users/yuanxiao/workspace/0yxgithub/roop/yxsamples/0daifang.jpg --target /Users/yuanxiao/workspace/0yxgithub/roop/yxsamples/0yx.jpeg  --output /Users/yuanxiao/workspace/0yxgithub/roop/yxsamples/output3.png 
 
