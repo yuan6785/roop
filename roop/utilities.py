@@ -86,13 +86,13 @@ def create_gif(target_path: str, output_path: str, dur: float = 0.2, gif_frames:
         # frames = [Image.open(image) for image in image_list] # 不要这样用，会占用大量文件描述符
         frames = []
         for filename in image_list:
-            im = Image.open(filename)
-            while True:
-                frames.append(im.copy())
-                try:
-                    im.seek(im.tell() + 1)
-                except EOFError:
-                    break
+            with Image.open(filename) as im:
+                while True:
+                    frames.append(im.copy())
+                    try:
+                        im.seek(im.tell() + 1)
+                    except EOFError:
+                        break
         frame_one = frames[0]
         # durations---每张图播放的时间(毫秒)
         # print(11111, temp_output_path)
