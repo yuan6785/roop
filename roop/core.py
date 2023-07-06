@@ -52,6 +52,7 @@ def parse_args() -> None:
     # add by yx---支持gif---
     program.add_argument('--out-type', help='keep original fps', dest='out_type', default='video') # video, gif
     program.add_argument('--gif-dur', help='keep original fps', dest='gif_dur', type=str, default='0.2') # 每张图显示的时间
+    program.add_argument('--gif-frames', help='keep original fps', dest='gif_frames', type=str, default='-1') # 一共用前多少张图生成gif,-1代表所有
 
     args = program.parse_args()
 
@@ -72,6 +73,7 @@ def parse_args() -> None:
     # add by yx---支持gif---
     roop.globals.out_type = args.out_type
     roop.globals.gif_dur = args.gif_dur
+    roop.globals.gif_frames = args.gif_frames
 
 
 def encode_execution_providers(execution_providers: List[str]) -> List[str]:
@@ -205,7 +207,7 @@ def start() -> None:
             update_status('Processing to video failed!')
     elif roop.globals.out_type == 'gif':
         update_status('Creating gif...')
-        create_gif(roop.globals.target_path, roop.globals.output_path, roop.globals.gif_dur)
+        create_gif(roop.globals.target_path, roop.globals.output_path, roop.globals.gif_dur, roop.globals.gif_frames)
         update_status('Processing to gif succeed!')
         clean_temp(roop.globals.target_path)
 

@@ -52,9 +52,10 @@ def create_video(target_path: str, fps: float = 30.0) -> None:
     temp_directory_path = get_temp_directory_path(target_path)
     run_ffmpeg(['-r', str(fps), '-i', os.path.join(temp_directory_path, '%04d.png'), '-c:v', roop.globals.video_encoder, '-crf', str(roop.globals.video_quality), '-pix_fmt', 'yuv420p', '-vf', 'colorspace=bt709:iall=bt601-6-625:fast=1', '-y', temp_output_path])
 
-def create_gif(target_path: str, output_path: str, dur: float = 0.2) -> None:
+
+def create_gif(target_path: str, output_path: str, dur: float = 0.2, gif_frames: str='-1') -> None:
     """
-    add by yx
+    add by yx----一次性合成一个gif
     """
     # 
     temp_output_path = get_temp_output_path(target_path)
@@ -77,15 +78,83 @@ def create_gif(target_path: str, output_path: str, dur: float = 0.2) -> None:
         from PIL import Image
         image_list = [ image for image in glob.glob(f"{temp_directory_path}/*") if image.endswith(".png")]
         image_list.sort(key=lambda x: int(x.split("/")[-1].split(".")[0]))
-        frames = [Image.open(image) for image in image_list]
-        print(111, "gif 一共有", len(frames), "张图片", f"dur: {float(dur)*1000} 毫秒")
+        print(111, "gif 一共有", len(image_list), "张图片", f"dur: {float(dur)*1000} 毫秒")
+        gif_frames = int(gif_frames)
+        if gif_frames > 0:
+            image_list = image_list[:gif_frames]
+        print(f"实际取了{len(image_list)}张图片")
+        # frames = [Image.open(image) for image in image_list] # 不要这样用，会占用大量文件描述符
+        frames = []
+        for filename in image_list:
+            im = Image.open(filename)
+            while True:
+                frames.append(im.copy())
+                try:
+                    im.seek(im.tell() + 1)
+                except EOFError:
+                    break
         frame_one = frames[0]
         # durations---每张图播放的时间(毫秒)
         # print(11111, temp_output_path)
         frame_one.save(output_path, format="GIF", append_images=frames,
                 save_all=True, duration=float(dur)*1000, loop=0)
-    
 
+# def create_gif(target_path: str, output_path: str, dur: float = 0.2, gif_frames: str='-1') -> None:
+#     """
+#     add by yx----如果png数量过大，先合成多个GIF，然后再合并成一个GIF
+#     """
+#     # 
+#     temp_output_path = get_temp_output_path(target_path)
+#     temp_directory_path = get_temp_directory_path(target_path)
+#     if 1:
+#         def create_gif_i(images, output_path, duration=150, loop=0):
+#             if isinstance(images[0], str):
+#                 # 如果传递的是文件路径列表，则打开每个文件
+#                 frames = [Image.open(image) for image in images]
+#             elif isinstance(images[0], Image.Image):
+#                 # 如果传递的是Image对象列表，则直接使用
+#                 frames = images
+#             else:
+#                 raise ValueError("Invalid input type for images")
+#             #
+#             frame_one = frames[0]
+#             frame_one.save(output_path, format="GIF", append_images=frames,
+#                         save_all=True, duration=duration, loop=loop)
+#         #
+#         import glob
+#         from PIL import Image
+#         image_list = [ image for image in glob.glob(f"{temp_directory_path}/*") if image.endswith(".png")]
+#         image_list.sort(key=lambda x: int(x.split("/")[-1].split(".")[0]))
+#         gif_frames = int(gif_frames)
+#         if gif_frames > 0:
+#             image_list = image_list[:gif_frames]
+#         # 
+#         real_dur = float(dur)*1000
+#         temp_gifs = []
+#         chunk_size = 100
+#         for i in range(0, len(image_list), chunk_size):
+#             chunk = image_list[i:i + chunk_size]
+#             temp_gif_path = f"{temp_directory_path}/temp_gif_{i}.gif"
+#             create_gif_i(chunk, temp_gif_path, duration=real_dur, loop=1)
+#             temp_gifs.append(temp_gif_path)
+
+#         frames = []
+#         for gif in temp_gifs:
+#             im = Image.open(gif)
+#             while True:
+#                 frames.append(im.copy())
+#                 try:
+#                     im.seek(im.tell() + 1)
+#                 except EOFError:
+#                     break
+
+#         create_gif_i(frames, output_path, duration=real_dur, loop=0)
+
+#         # # 删除临时GIF文件
+#         # for temp_gif in temp_gifs:
+#         #     os.remove(temp_gif)
+        
+    
 
 def restore_audio(target_path: str, output_path: str) -> None:
     temp_output_path = get_temp_output_path(target_path)
