@@ -38,5 +38,5 @@ cloab笔记本参考（有显卡，可以换比较大的视频，一般的gif本
 
 
 后期要做:
-     https://blog.csdn.net/weixin_42357472/article/details/131104449
+     https://blog.csdn.net/weixin_42357472/article/details/131104449   有道搜索[人脸识别]--里面有这个文章的保存，和roop用的统一模型，还可以实时检测摄像头人脸
      具体的人脸识别，哪张脸属于哪个人，然后再换脸
