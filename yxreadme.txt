@@ -16,7 +16,7 @@ python run.py --source /Users/yuanxiao/workspace/0yxgithub/roop/yxsamples/0daifa
 # 这里需要注意根据target的帧数和时长来计算生成的gif的gif-dur参数, 例如target有100帧, 时长为10s, 那么gif-dur就是10/100=0.1
 python run.py --source /Users/yuanxiao/workspace/0yxgithub/roop/yxsamples/0daifang.jpg --target /Users/yuanxiao/workspace/0yxgithub/roop/yxsamples/0yaonv.mp4  --output /Users/yuanxiao/workspace/0yxgithub/roop/yxsamples/output3.gif --out-type gif --gif-dur 0.0333 --many-faces --gif-frames -1
 
-生成gif不换脸，只是人脸增强(一般用于换脸后的增强)(不需要source参数，只需要target参数)---也可以用于视频:
+生成gif不换脸，只是人脸增强(一般用于换脸后的增强)(不需要source参数，只需要target参数)---也可以用于视频（如果是用于换脸后的增强，--gif-dur参数和换脸的--gif-dur最好一致）:
 python run.py  --target /Users/yuanxiao/workspace/0yxgithub/roop/yxsamples/output3.gif  --output /Users/yuanxiao/workspace/0yxgithub/roop/yxsamples/output3_enhancer.gif --out-type gif --gif-dur 0.0333 --many-faces --frame-processor face_enhancer
 
 生成png图片:
