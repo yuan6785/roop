@@ -32,6 +32,27 @@ python run.py --source /Users/yuanxiao/workspace/0yxgithub/roop/yxsamples/0daifa
 python run.py  --target /Users/yuanxiao/workspace/0yxgithub/roop/yxsamples/output3.png  --output /Users/yuanxiao/workspace/0yxgithub/roop/yxsamples/output3_enhancer.png --many-faces --frame-processor face_enhancer
 
 
+
+下面是一个经常用来换脸的gif脚本，换脸和增强一体--------------------重要---------------------
+###################
+echo --"source"---
+source_dirpath=/Users/yuanxiao/workspace/0yxgithub/roop/yxsamples
+source_name=0yaonv2
+source_ext=jpg 
+echo --"target"---
+target_dirpath=/Users/yuanxiao/workspace/0yxgithub/roop/yxsamples
+target_name=00010
+target_ext=gif
+echo --"target"---
+output_dirpath=/Users/yuanxiao/workspace/0yxgithub/roop/yxsamples
+echo --"start 1"---
+python run.py --source ${source_dirpath}/${source_name}.${source_ext} --target ${target_dirpath}/${target_name}.${target_ext}  --output ${output_dirpath}/output_${source_name}_${target_name}.gif --out-type gif --gif-dur 0.1 --many-faces --gif-frames -1
+echo --"start 2"---
+python run.py  --target ${output_dirpath}/output_${source_name}_${target_name}.gif  --output ${output_dirpath}/output_${source_name}_${target_name}_enhancer.gif --out-type gif --gif-dur 0.1 --many-faces --frame-processor face_enhancer
+rm -rf ${output_dirpath}/output_${source_name}_${target_name}.gif
+###################
+
+
 cloab笔记本参考（有显卡，可以换比较大的视频，一般的gif本地mac即可）： ufyx_换脸.ipynb
 
 换脸后再增强人脸的效果更好
